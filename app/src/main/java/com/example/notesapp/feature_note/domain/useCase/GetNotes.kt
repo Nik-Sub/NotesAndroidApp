@@ -11,7 +11,7 @@ class GetNotes (
     private val repository: NoteRepository
 ) {
 
-    operator fun invoke(noteOrder: NoteOrder) : Flow<List<Note>>{
+    operator fun invoke(noteOrder: NoteOrder = NoteOrder.Date(OrderType.Ascending)) : Flow<List<Note>>{
         return repository.getAllNote().map { notes ->
             when (noteOrder.orderType){
                 is OrderType.Ascending -> {
