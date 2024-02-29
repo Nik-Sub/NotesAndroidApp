@@ -1,5 +1,6 @@
 package com.example.notesapp.feature_note.presentation.notes
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -48,7 +49,7 @@ import kotlinx.coroutines.launch
 fun NotesScreen(
     navController: NavController,
     viewModel: NotesViewModel
-){
+) {
     val state = viewModel.state.value
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -71,7 +72,7 @@ fun NotesScreen(
                 snackbar = { data ->
                     Snackbar(
                         modifier = Modifier.padding(16.dp),
-                    ){
+                    ) {
                         Text("Snackbar message")
                     }
                 }
@@ -103,51 +104,52 @@ fun NotesScreen(
                         contentDescription = "Sort"
                     )
                 }
-                AnimatedVisibility(
-                    visible = state.isOrderSectionVisible,
-                    enter = fadeIn() + slideInVertically(),
-                    exit = fadeOut() + slideOutVertically()
-                ) {
-                    OrderSection(
+            }
+            AnimatedVisibility(
+                visible = state.isOrderSectionVisible,
+                enter = fadeIn() + slideInVertically(),
+                exit = fadeOut() + slideOutVertically()
+            ) {
+                OrderSection(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    noteOrder = state.noteOrder,
+                    onOrderChange = {
+                        viewModel.onEvent(NotesEvent.Order(it))
+                    }
+                )
+            }
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(state.notes) { note ->
+                    NoteItem(
+                        note = note,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp),
-                        noteOrder = state.noteOrder,
-                        onOrderChange = {
-                            viewModel.onEvent(NotesEvent.Order(it))
-                        }
-                    )
-                }
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(state.notes) { note ->
-                        NoteItem(
-                            note = note,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    navController.navigate(
-                                        Screen.AddEditNoteScreen.route +
-                                                "?noteId=${note.id}&noteColor=${note.color}"
-                                    )
-                                },
-                            onDeleteClick = {
-                                viewModel.onEvent(NotesEvent.DeleteNote(note))
-                                scope.launch {
-                                    val result = snackbarHostState.showSnackbar(
-                                        message = "Note deleted",
-                                        actionLabel = "Undo"
-                                    )
-                                    if(result == SnackbarResult.ActionPerformed) {
-                                        viewModel.onEvent(NotesEvent.RestoreNote)
-                                    }
+                            .clickable {
+                                Log.d("NIKOLA", note.id.toString())
+                                navController.navigate(
+                                    Screen.AddEditNoteScreen.route +
+                                            "?noteId=${note.id}&noteColor=${note.color}"
+                                )
+                            },
+                        onDeleteClick = {
+                            viewModel.onEvent(NotesEvent.DeleteNote(note))
+                            scope.launch {
+                                val result = snackbarHostState.showSnackbar(
+                                    message = "Note deleted",
+                                    actionLabel = "Undo"
+                                )
+                                if (result == SnackbarResult.ActionPerformed) {
+                                    viewModel.onEvent(NotesEvent.RestoreNote)
                                 }
                             }
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
-
             }
+
         }
     }
 }

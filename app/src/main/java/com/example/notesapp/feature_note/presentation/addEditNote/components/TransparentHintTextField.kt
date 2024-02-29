@@ -1,5 +1,6 @@
 package com.example.notesapp.feature_note.presentation.addEditNote.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
@@ -36,6 +37,7 @@ fun TransparentHintTextField(
                     onFocusChange(it)
                 }
         )
+        Log.d("NIKOLA", isHintVisible.toString())
         if (isHintVisible){
             Text(text = hint, style = textStyle, color = Color.DarkGray)
         }

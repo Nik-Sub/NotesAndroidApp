@@ -24,7 +24,7 @@ class AddEditNoteViewModel(
 
 
     private val _noteContent = mutableStateOf(NoteTextFieldState(
-        text = "Enter text..."
+        hint = "Enter text..."
     ))
 
     val noteContent: State<NoteTextFieldState> = _noteContent
@@ -68,7 +68,7 @@ class AddEditNoteViewModel(
             is AddEditNoteEvent.ChangeTitleFocus -> {
                 _noteTitle.value = noteTitle.value.copy(
                     isHintVisible = !event.focusState.isFocused &&
-                        !noteTitle.value.text.isBlank()
+                        noteTitle.value.text.isBlank()
                 )
             }
             is AddEditNoteEvent.EnteredContent -> {
@@ -79,7 +79,7 @@ class AddEditNoteViewModel(
             is AddEditNoteEvent.ChangeContentFocus -> {
                 _noteContent.value = _noteContent.value.copy(
                     isHintVisible = !event.focusState.isFocused &&
-                            !noteContent.value.text.isBlank()
+                            noteContent.value.text.isBlank()
                 )
             }
             is AddEditNoteEvent.ChangeColor -> {
