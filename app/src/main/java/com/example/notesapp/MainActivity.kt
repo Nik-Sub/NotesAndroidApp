@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                         getNote = GetNote(repository)
                     )
                     val notesViewModel = NotesViewModel(notesUseCases)
-                    val addEditNoteViewModel = AddEditNoteViewModel(notesUseCases, SavedStateHandle())
+                    val addEditNoteViewModel = AddEditNoteViewModel(notesUseCases, navController)
 
 
                     NavHost(

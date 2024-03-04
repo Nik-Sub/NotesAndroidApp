@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.notesapp.feature_note.domain.model.Note
 import com.example.notesapp.feature_note.domain.useCase.NoteUseCases
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class AddEditNoteViewModel(
     private val noteUseCases: NoteUseCases,
-    savedStateHandle: SavedStateHandle
+    navController: NavController
+    //savedStateHandle: SavedStateHandle if im using hilt then hilt will inject nav arguments into SavedStateHandle
 ) : ViewModel() {
     private val _noteTitle = mutableStateOf(NoteTextFieldState(
         hint = "Enter title..."
@@ -38,25 +40,70 @@ class AddEditNoteViewModel(
 
     private var currentNoteId: Int? = null
 
-    init {
-        savedStateHandle.get<Int>("noteId")?.let {noteId ->
-            if ( noteId != -1 ){
-                viewModelScope.launch {
-                    noteUseCases.getNote(noteId)?.also {note ->
-                        currentNoteId = noteId
-                        _noteTitle.value = _noteTitle.value.copy(
-                            text = note.title
-                        )
-                        _noteContent.value = _noteContent.value.copy(
-                            text = note.content
-                        )
-                        _noteColor.value = note.color
-                    }
-                }
+    // can do this with hilt
+//    init {
+//        savedStateHandle.get<Int>("noteId")?.let {noteId ->
+//            if ( noteId != -1 ){
+//                viewModelScope.launch {
+//                    noteUseCases.getNote(noteId)?.also {note ->
+//                        currentNoteId = noteId
+//                        _noteTitle.value = _noteTitle.value.copy(
+//                            text = note.title
+//                        )
+//                        _noteContent.value = _noteContent.value.copy(
+//                            text = note.content
+//                        )
+//                        _noteColor.value = note.color
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+
+    fun resetViewModel(){
+
+        currentNoteId = null
+        _noteTitle.value = _noteTitle.value.copy(
+            text = ""
+        )
+        _noteContent.value = _noteContent.value.copy(
+            text = ""
+        )
+        _noteTitle.value = _noteTitle.value.copy(
+            isHintVisible = true
+        )
+        _noteContent.value = _noteContent.value.copy(
+            isHintVisible = true
+        )
+
+
+    }
+    fun handleNoteClicked(noteId: Int, noteColor: Int) {
+
+        viewModelScope.launch {
+            noteUseCases.getNote(noteId)?.also {note ->
+                currentNoteId = noteId
+                _noteTitle.value = _noteTitle.value.copy(
+                    text = note.title
+                )
+                _noteContent.value = _noteContent.value.copy(
+                    text = note.content
+                )
+                _noteTitle.value = _noteTitle.value.copy(
+                    isHintVisible = false
+                )
+                _noteContent.value = _noteContent.value.copy(
+                    isHintVisible = false
+                )
+
+                _noteColor.value = note.color
+
+
             }
         }
-    }
 
+    }
 
     fun onEvent(event: AddEditNoteEvent){
         when (event) {
