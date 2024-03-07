@@ -1,8 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.kapt")
+    //id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -57,6 +58,16 @@ android {
 dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    //Dagger - Hilt
+    implementation("com.google.dagger:hilt-android:2.46")
+    kapt("com.google.dagger:hilt-android-compiler:2.46")
+    implementation("androidx.hilt:hilt-work:1.2.0")
+    kapt("androidx.hilt:hilt-compiler:1.2.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+
     val nav_version = "2.7.7"
 
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
@@ -70,7 +81,7 @@ dependencies {
     // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$room_version")
     // To use Kotlin Symbol Processing (KSP)
-    ksp("androidx.room:room-compiler:$room_version")
+    //ksp("androidx.room:room-compiler:$room_version")
 
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
@@ -79,16 +90,16 @@ dependencies {
     implementation("androidx.room:room-rxjava2:$room_version")
 
     // optional - RxJava3 support for Room
-    implementation("androidx.room:room-rxjava3:$room_version")
+    //implementation("androidx.room:room-rxjava3:$room_version")
 
     // optional - Guava support for Room, including Optional and ListenableFuture
-    implementation("androidx.room:room-guava:$room_version")
+    //implementation("androidx.room:room-guava:$room_version")
 
     // optional - Test helpers
-    testImplementation("androidx.room:room-testing:$room_version")
+    //testImplementation("androidx.room:room-testing:$room_version")
 
     // optional - Paging 3 Integration
-    implementation("androidx.room:room-paging:$room_version")
+    //implementation("androidx.room:room-paging:$room_version")
 
 
     implementation("androidx.core:core-ktx:1.12.0")

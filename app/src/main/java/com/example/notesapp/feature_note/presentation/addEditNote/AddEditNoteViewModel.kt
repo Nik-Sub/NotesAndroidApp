@@ -9,14 +9,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.notesapp.feature_note.domain.model.Note
 import com.example.notesapp.feature_note.domain.useCase.NoteUseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AddEditNoteViewModel(
+@HiltViewModel
+class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
-    navController: NavController
-    //savedStateHandle: SavedStateHandle if im using hilt then hilt will inject nav arguments into SavedStateHandle
+    //navController: NavController
+    savedStateHandle: SavedStateHandle // if im using hilt then hilt will inject nav arguments into SavedStateHandle
 ) : ViewModel() {
     private val _noteTitle = mutableStateOf(NoteTextFieldState(
         hint = "Enter title..."
@@ -41,24 +44,30 @@ class AddEditNoteViewModel(
     private var currentNoteId: Int? = null
 
     // can do this with hilt
-//    init {
-//        savedStateHandle.get<Int>("noteId")?.let {noteId ->
-//            if ( noteId != -1 ){
-//                viewModelScope.launch {
-//                    noteUseCases.getNote(noteId)?.also {note ->
-//                        currentNoteId = noteId
-//                        _noteTitle.value = _noteTitle.value.copy(
-//                            text = note.title
-//                        )
-//                        _noteContent.value = _noteContent.value.copy(
-//                            text = note.content
-//                        )
-//                        _noteColor.value = note.color
-//                    }
-//                }
-//            }
-//        }
-//    }
+    init {
+        savedStateHandle.get<Int>("noteId")?.let {noteId ->
+            if ( noteId != -1 ){
+                viewModelScope.launch {
+                    noteUseCases.getNote(noteId)?.also {note ->
+                        currentNoteId = noteId
+                        _noteTitle.value = _noteTitle.value.copy(
+                            text = note.title
+                        )
+                        _noteContent.value = _noteContent.value.copy(
+                            text = note.content
+                        )
+                        _noteColor.value = note.color
+                        _noteTitle.value = _noteTitle.value.copy(
+                            isHintVisible = false
+                        )
+                        _noteContent.value = _noteContent.value.copy(
+                            isHintVisible = false
+                        )
+                    }
+                }
+            }
+        }
+    }
 
 
     fun resetViewModel(){

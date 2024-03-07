@@ -8,6 +8,7 @@ import com.example.notesapp.feature_note.domain.useCase.NoteUseCases
 
 import androidx.compose.runtime.remember
 import androidx.compose.animation.Animatable
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -52,17 +53,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.notesapp.feature_note.domain.model.Note
 import com.example.notesapp.feature_note.presentation.addEditNote.components.TransparentHintTextField
 import com.example.notesapp.feature_note.presentation.notes.NotesEvent
 import kotlinx.coroutines.delay
 
+@ExperimentalAnimationApi
 @Composable
 fun AddEditNoteScreen(
     navController: NavController,
     noteColor: Int,
-    viewModel: AddEditNoteViewModel
+    viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
     val titleState = viewModel.noteTitle.value
     val contentState = viewModel.noteContent.value
@@ -221,20 +224,20 @@ fun AddEditNoteScreen(
 
 
 
-    var isFirstTime by remember { mutableStateOf(true) }
-
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val noteId = navBackStackEntry?.arguments?.getInt("noteId")
-    val noteColor = navBackStackEntry?.arguments?.getInt("noteColor")
-    if (noteId != null && noteColor != null && isFirstTime) {
-        Log.d("NIKOLA", noteId.toString())
-        viewModel.handleNoteClicked(noteId, noteColor)
-        isFirstTime = false
-    }
-    else if (noteId == null && noteColor == null){
-        viewModel.resetViewModel()
-    }
+//    var isFirstTime by remember { mutableStateOf(true) }
+//
+//
+//    val navBackStackEntry by navController.currentBackStackEntryAsState()
+//    val noteId = navBackStackEntry?.arguments?.getInt("noteId")
+//    val noteColor = navBackStackEntry?.arguments?.getInt("noteColor")
+//    if (noteId != null && noteColor != null && isFirstTime) {
+//        Log.d("NIKOLA", noteId.toString())
+//        viewModel.handleNoteClicked(noteId, noteColor)
+//        isFirstTime = false
+//    }
+//    else if (noteId == null && noteColor == null){
+//        viewModel.resetViewModel()
+//    }
 
 
 
