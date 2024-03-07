@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main", "master", "NikolaBranch" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "main", "master", "NikolaBranch" ]
     types: [review_requested, review_request_removed, reopened, synchronize, closed]
   pull_request_review:
     types: [submitted]
