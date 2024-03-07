@@ -19,19 +19,19 @@ jobs:
           echo test, and deploy your project.
 
   check_review:
-  runs-on: ubuntu-latest
-  if: github.event_name == 'pull_request'
-  steps:
-    - uses: actions/github-script@v5
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { data: reviews } = await github.pulls.listReviews({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: context.payload.pull_request.number
-          });
-          const hasOgnjenApproval = reviews.some(review => review.user.login === 'ogsub' && review.state === 'APPROVED');
-          if (!hasOgnjenApproval) {
-            core.setFailed('Micko approval required.');
-          }
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_target' && github.event.action == 'opened'
+    steps:
+      - uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: reviews } = await github.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+            const hasOgnjenApproval = reviews.some(review => review.user.login === 'ogsub' && review.state === 'APPROVED');
+            if (!hasOgnjenApproval) {
+              core.setFailed('Micko approval required.');
+            }
