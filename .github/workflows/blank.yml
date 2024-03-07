@@ -33,5 +33,5 @@ jobs:
             });
             const hasOgnjenApproval = reviews.some(review => review.user.login === 'ogsub' && review.state === 'APPROVED');
             if (!hasOgnjenApproval) {
-              core.setFailed('Micko approval required.');
+              core.setFailed('Ognjen approval required.');
             }
