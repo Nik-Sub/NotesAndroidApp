@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main", "master", "NikolaBranch" ]
   pull_request_target:
-    types: [review_requested, review_request_removed, reopened, synchronize, closed]
+    types: [assigned, unassigned, labeled, unlabeled, opened, edited, closed, reopened, synchronize, converted_to_draft, locked, unlocked, enqueued, dequeued, milestoned, demilestoned, ready_for_review, review_requested, review_request_removed, auto_merge_enabled, auto_merge_disabled]
 
 jobs:
   build:
