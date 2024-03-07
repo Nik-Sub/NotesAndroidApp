@@ -3,11 +3,8 @@ name: CI
 on:
   push:
     branches: [ "main", "master", "NikolaBranch" ]
-  pull_request:
-    branches: [ "main", "master", "NikolaBranch" ]
+  pull_request_target:
     types: [review_requested, review_request_removed, reopened, synchronize, closed]
-  pull_request_review:
-    types: [submitted]
 
 jobs:
   build:
@@ -23,7 +20,7 @@ jobs:
 
   check_review:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    if: github.event_name == 'pull_request_target'
     steps:
       - uses: actions/github-script@v5
         with:
